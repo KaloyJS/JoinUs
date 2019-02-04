@@ -2,11 +2,15 @@ var express = require("express"),
     mysql   = require('mysql'),
     app     = express();
     
+app.set("view engine", "ejs");
+    
 var connection = mysql.createConnection({
     host     : 'localhost',
     user     :  'kaloy',
     database : 'join_us'
 });
+
+
     
 app.get("/", function(req, res){
     // Find count of users in Db
@@ -14,7 +18,8 @@ app.get("/", function(req, res){
     connection.query(q, function(err, results){
         if (err) throw err;
         var count = results[0].count;
-        res.send("We have " + count + " users in our db");
+        // res.send("We have " + count + " users in our db");
+        res.render("home", {count: count});
     });
 });
 
