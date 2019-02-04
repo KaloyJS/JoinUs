@@ -1,8 +1,10 @@
-var express = require("express"),
-    mysql   = require('mysql'),
-    app     = express();
+var express    = require("express"),
+    mysql      = require('mysql'),
+    bodyParser = require('body-parser'),
+    app        = express();
     
 app.set("view engine", "ejs");
+app.use(bodyParser.urlencoded({extended: true}));
     
 var connection = mysql.createConnection({
     host     : 'localhost',
@@ -20,6 +22,18 @@ app.get("/", function(req, res){
         var count = results[0].count;
         // res.send("We have " + count + " users in our db");
         res.render("home", {count: count});
+    });
+});
+
+//post route
+app.post("/register", function(req, res){
+    var person = {
+        email: req.body.email
+    };
+    
+    connection.query('INSERT INTO users SET ?', person, function(err, result) {
+      if (err) throw err;
+      res.redirect("/");
     });
 });
 
